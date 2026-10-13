@@ -8,7 +8,7 @@ TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # --- RANGE DATE DESIDERATE ---
-START_DATE = datetime(2026, 10, 1)
+START_DATE = datetime(2026, 10, 13)
 END_DATE = datetime(2026, 11, 15)
 
 
