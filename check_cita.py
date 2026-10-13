@@ -13,7 +13,7 @@ CHECK_INTERVAL = 300
 
 # Range date desiderate (Ottobre e primi 15 giorni di novembre 2026)
 START_DATE = datetime(2026, 10, 1)
-END_DATE = datetime(2026, 11, 15)
+END_DATE = datetime(2026, 11, 18)
 
 
 def send_telegram_message(message):
