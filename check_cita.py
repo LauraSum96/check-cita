@@ -12,7 +12,7 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 CHECK_INTERVAL = 300
 
 # Range date desiderate (Ottobre e primi 15 giorni di novembre 2026)
-START_DATE = datetime(2026, 10, 1)
+START_DATE = datetime(2026, 10, 14)
 END_DATE = datetime(2026, 11, 18)
 
 
