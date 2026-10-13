@@ -1,19 +1,16 @@
 from datetime import datetime, timedelta
+import os
 import time
 import requests
-import os
 
-# --- CONFIGURAZIONE TELEGRAM ---
+# --- CONFIGURAZIONE TELEGRAM (Prende i dati dai segreti di GitHub) ---
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
-# --- CONFIGURAZIONE CONTROLLO ---
-# Intervallo in secondi tra un controllo e l'altro (es. ogni 5 minuti = 300)
-CHECK_INTERVAL = 300
-
-# Range date desiderate (Ottobre e primi 15 giorni di novembre 2026)
-START_DATE = datetime(2026, 10, 14)
-END_DATE = datetime(2026, 11, 18)
+# --- RANGE DATE DESIDERATE ---
+# Ottobre e primi 15 giorni di novembre 2026
+START_DATE = datetime(2026, 10, 1)
+END_DATE = datetime(2026, 11, 15)
 
 
 def send_telegram_message(message):
@@ -58,41 +55,39 @@ def check_appointments():
       response = requests.get(url, headers=headers)
       if response.status_code == 200:
         data = response.json()
-        hours = data.get("hours", [])
 
-        # Se l'array 'hours' non è vuoto, ci sono appuntamenti disponibili!
-        if hours:
-          available_times = [h[0] for h in hours]
+        # PRENDIAMO SOLO LA LISTA "hours" (i liberi), IGNORANDO "allhours"
+        available_hours = data.get("hours", [])
+
+        # Se la lista NON è vuota, allora ci sono posti liberi reali!
+        if available_hours and len(available_hours) > 0:
+          available_times = [h[0] for h in available_hours]
           msg = (
               f"🚨 **Trovata Cita a La Oliva!**\n📅 Data: **{date_str}**\n⏰"
               f" Orari disponibili: {', '.join(available_times)}\n🔗"
               " [Prenota"
               " ora](https://citaprevia.encolate.es/laoliva/reservation)"
           )
-          print(f"Trovato appuntamento per il {date_str}!")
+          print(f"Trovato appuntamento reale per il {date_str}!")
           send_telegram_message(msg)
+        else:
+          print(
+              f"Nessun appuntamento disponibile per il {date_str} (tutto"
+              " occupato)"
+          )
       else:
-        print(
-            f"Errore HTTP {response.status_code} per la data {date_str}"
-        )
+        print(f"Errore HTTP {response.status_code} per la data {date_str}")
     except Exception as e:
-        print(f"Errore durante la richiesta per {date_str}: {e}")
+      print(f"Errore durante la richiesta per {date_str}: {e}")
 
     # Passa al giorno successivo
     current_date += timedelta(days=1)
-    # Una piccola pausa per non sovraccaricare il server
+    # Pausa breve tra una richiesta e l'altra per non sovrintendere il server
     time.sleep(1)
 
 
 if __name__ == "__main__":
-  # Sostituisci i dati prima di avviare
-  if (
-      TELEGRAM_BOT_TOKEN == "IL_TUO_BOT_TOKEN"
-      or TELEGRAM_CHAT_ID == "IL_TUO_CHAT_ID"
-  ):
-    print("ATTENZIONE: Ricordati di inserire il Token e il Chat ID di Telegram!")
+  if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+    print("ATTENZIONE: Variabili di ambiente Telegram mancanti!")
   else:
-    while True:
-      check_appointments()
-      print(f"Attesa di {CHECK_INTERVAL} secondi prima del prossimo controllo...\n")
-      time.sleep(CHECK_INTERVAL)
+    check_appointments()
