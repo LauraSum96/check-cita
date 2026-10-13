@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 import time
 import requests
+import os
 
 # --- CONFIGURAZIONE TELEGRAM ---
-TELEGRAM_BOT_TOKEN = "8888676889:AAFTEuyFXajAq2IxSgC4JtvxFMfbWKGPx8s"
-TELEGRAM_CHAT_ID = "112054839"
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # --- CONFIGURAZIONE CONTROLLO ---
 # Intervallo in secondi tra un controllo e l'altro (es. ogni 5 minuti = 300)
