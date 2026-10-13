@@ -9,7 +9,7 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # --- RANGE DATE DESIDERATE ---
 # Ottobre e primi 15 giorni di novembre 2026
-START_DATE = datetime(2026, 10, 1)
+START_DATE = datetime(2026, 10, 13)
 END_DATE = datetime(2026, 11, 15)
 
 
